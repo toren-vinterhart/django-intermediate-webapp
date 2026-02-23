@@ -6,6 +6,7 @@ app_name = 'blog'
 
 urlpatterns = [
     path('cbv-index/', views.IndexView.as_view(), name='cbv-index'),
+    path('posts/', views.PostList.as_view(), name='post-list'),
     path('go-to-msn/<int:pk>', views.RedirectToMSN.as_view(), name='redirect-to-msn'),
     # path('fbv-index/', views.index_view, name='fbv-index'),
     # path('go-to-msn', views.redirect_to_msn, name='redirect-to-msn'),

@@ -1,14 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import TemplateView, RedirectView
+from django.views.generic.base import TemplateView, RedirectView
+from django.views.generic.list import ListView
 from .models import Post
 
 # Create your views here.
 
 
 class IndexView(TemplateView):
-    """
-    A class-based view for show index page
-    """
+    """ A class-based view for show index page """
     template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
@@ -19,7 +18,7 @@ class IndexView(TemplateView):
 
 
 class RedirectToMSN(RedirectView):
-    """A class-based view for redirect to msn"""
+    """ A class-based view for redirect to msn """
     url = 'https://www.msn.com'
 
     def get_redirect_url(self, *args, **kwargs):
@@ -27,6 +26,20 @@ class RedirectToMSN(RedirectView):
         print(post)
         return super().get_redirect_url(*args, **kwargs)
 
+
+class PostList(ListView):
+    """ A class-based view for posts list"""
+    # model = Post # Instead of this we can use queryset or get_queryset method
+    # queryset = Post.objects.all()
+    # template_name = 'blog/post_list.html' # If we don't define it django use 'blog/post_list.html' as default
+    context_object_name = 'posts' # default name is object_list
+    paginate_by = 2
+    # ordering = ['-published_date'] # it works when we use model or queryset instead of get_queryset method
+
+    def get_queryset(self):
+        posts = Post.objects.filter(status=True).order_by('-published_date')
+        return posts
+    
     
 ''' FBV to show a template
 def index_view(request):
