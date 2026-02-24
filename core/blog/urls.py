@@ -8,6 +8,7 @@ urlpatterns = [
     path('cbv-index/', views.IndexView.as_view(), name='cbv-index'),
     path('post/', views.PostListView.as_view(), name='post-list'),
     path('post/<int:pk>/', views.PostDetailView.as_view(), name='post-detail'),
+    path('post/form/', views.PostFormView.as_view(), name='post-form'),
     path('go-to-msn/<int:pk>/', views.RedirectToMSN.as_view(), name='redirect-to-msn'),
     # path('fbv-index/', views.index_view, name='fbv-index'),
     # path('go-to-msn', views.redirect_to_msn, name='redirect-to-msn'),

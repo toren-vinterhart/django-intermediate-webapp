@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView, RedirectView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import FormView
 from .models import Post
+from .forms import PostForm
 
 # Create your views here.
 
@@ -45,6 +48,18 @@ class PostListView(ListView):
 class PostDetailView(DetailView):
     model = Post
     context_object_name = 'post'
+
+
+class PostFormView(FormView):
+    template_name = 'blog/post_form.html'
+    form_class = PostForm
+    success_url = reverse_lazy('blog:post-list')
+    # success_url = '/blog/post/' # also we can use this way
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
 
 
 ''' FBV to show a template
