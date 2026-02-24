@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.base import TemplateView, RedirectView
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 from .models import Post
 
 # Create your views here.
@@ -27,7 +28,7 @@ class RedirectToMSN(RedirectView):
         return super().get_redirect_url(*args, **kwargs)
 
 
-class PostList(ListView):
+class PostListView(ListView):
     """ A class-based view for posts list"""
     # model = Post # Instead of this we can use queryset or get_queryset method
     # queryset = Post.objects.all()
@@ -40,7 +41,12 @@ class PostList(ListView):
         posts = Post.objects.filter(status=True).order_by('-published_date')
         return posts
     
-    
+
+class PostDetailView(DetailView):
+    model = Post
+    context_object_name = 'post'
+
+
 ''' FBV to show a template
 def index_view(request):
     """
