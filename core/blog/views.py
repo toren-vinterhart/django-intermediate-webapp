@@ -3,9 +3,9 @@ from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView, RedirectView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, CreateView
 from .models import Post
-from .forms import PostForm
+from .forms import PostModelForm
 
 # Create your views here.
 
@@ -51,15 +51,25 @@ class PostDetailView(DetailView):
 
 
 class PostFormView(FormView):
-    template_name = 'blog/post_form.html'
-    form_class = PostForm
+    template_name = 'blog/post_form_for_FormView.html'
+    form_class = PostModelForm
     success_url = reverse_lazy('blog:post-list')
     # success_url = '/blog/post/' # also we can use this way
 
     def form_valid(self, form):
+        form.instance.author = self.request.user
         form.save()
         return super().form_valid(form)
+    
 
+class PostCreateView(CreateView):
+    model = Post
+    form_class = PostModelForm # If we don't define form_class variable, CreateView creates form automatically so we need to define fields variable here.
+    # fields = ['title', 'content', 'status', 'category', 'published_date']
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
 
 ''' FBV to show a template

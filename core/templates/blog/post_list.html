@@ -10,6 +10,7 @@
     {% for post in posts %}
       <div>
         <h2><a href="{% url 'blog:post-detail' pk=post.id %}">{{ post.title }}</a></h2>
+        <p>{{ post.author }}</p>
         <p>{{ post.content }}</p>
         <p>{{ post.published_date }}</p>
       </div>

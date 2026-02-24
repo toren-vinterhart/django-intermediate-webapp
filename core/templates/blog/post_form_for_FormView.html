@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Post</title>
+    <title>Post Form - for FormView</title>
 </head>
 <body>
     
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Save Post">
+        <input type="submit" value="send message">
     </form>
 
 </body>
