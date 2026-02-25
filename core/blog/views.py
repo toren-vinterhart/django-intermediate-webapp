@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView, RedirectView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import FormView, CreateView
+from django.views.generic.edit import FormView, CreateView, UpdateView
 from .models import Post
 from .forms import PostModelForm
 
@@ -49,6 +49,11 @@ class PostDetailView(DetailView):
     model = Post
     context_object_name = 'post'
 
+    def get_queryset(self):
+        query = super().get_queryset()
+        query = query.filter(status=True)
+        return query
+
 
 class PostFormView(FormView):
     template_name = 'blog/post_form_for_FormView.html'
@@ -64,12 +69,32 @@ class PostFormView(FormView):
 
 class PostCreateView(CreateView):
     model = Post
-    form_class = PostModelForm # If we don't define form_class variable, CreateView creates form automatically so we need to define fields variable here.
+    
+    # If `form_class` is not defined, Django's CreateView
+    # automatically generates a ModelForm based on `model`
+    # and requires `fields` to be defined instead.
+    
+    form_class = PostModelForm # Otherwise define 'fields' instead
     # fields = ['title', 'content', 'status', 'category', 'published_date']
+    success_url = reverse_lazy('blog:post-list')
 
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+    
+
+class PostEditView(UpdateView):
+    model = Post
+    form_class = PostModelForm
+    success_url = reverse_lazy('blog:post-list')
+
+    # def get_success_url(self):
+    #     return reverse_lazy('blog:post-detail', kwargs={'pk': self.object.pk})
+
+    def get_queryset(self):
+        query = super().get_queryset()
+        query = query.filter(status=True)
+        return query
 
 
 ''' FBV to show a template

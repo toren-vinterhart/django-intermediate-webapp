@@ -6,6 +6,7 @@ from .models import Post, Category
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'status', 'category', 'created_date', 'published_date')
+    list_editable = ('status',)
 
 
 @admin.register(Category)
