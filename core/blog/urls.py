@@ -11,6 +11,7 @@ urlpatterns = [
     path('post/form/', views.PostFormView.as_view(), name='post-form'),
     path('post/create/', views.PostCreateView.as_view(), name='post-create'),
     path('post/<int:pk>/edit/', views.PostEditView.as_view(), name='post-edit'),
+    path('post/<int:pk>/delete', views.PostDeleteView.as_view(), name='post-delete'),
     path('go-to-msn/<int:pk>/', views.RedirectToMSN.as_view(), name='redirect-to-msn'),
     # path('fbv-index/', views.index_view, name='fbv-index'),
     # path('go-to-msn', views.redirect_to_msn, name='redirect-to-msn'),

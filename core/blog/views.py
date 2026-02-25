@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView, RedirectView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import FormView, CreateView, UpdateView
+from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
 from .models import Post
 from .forms import PostModelForm
 
@@ -90,6 +90,16 @@ class PostEditView(UpdateView):
 
     # def get_success_url(self):
     #     return reverse_lazy('blog:post-detail', kwargs={'pk': self.object.pk})
+
+    def get_queryset(self):
+        query = super().get_queryset()
+        query = query.filter(status=True)
+        return query
+        
+
+class PostDeleteView(DeleteView):
+    model = Post
+    success_url = reverse_lazy('blog:post-list')
 
     def get_queryset(self):
         query = super().get_queryset()

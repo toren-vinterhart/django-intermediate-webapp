@@ -15,6 +15,7 @@
         <p>{{ post.content }}</p>
         <p>{{ post.published_date }}</p>
         <h5><a href="{% url 'blog:post-edit' pk=post.id %}">Edit</a></h5>
+        <h5><a href="{% url 'blog:post-delete' pk=post.id %}">Delete</a></h5>
       </div>
     {% endfor %}
 
