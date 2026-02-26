@@ -4,6 +4,7 @@ from django.views.generic.base import TemplateView, RedirectView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Post
 from .forms import PostModelForm
 
@@ -31,7 +32,7 @@ class RedirectToMSN(RedirectView):
         return super().get_redirect_url(*args, **kwargs)
 
 
-class PostListView(ListView):
+class PostListView(LoginRequiredMixin, ListView):
     """ A class-based view for posts list"""
     # model = Post # Instead of this we can use queryset or get_queryset method
     # queryset = Post.objects.all()
@@ -45,7 +46,7 @@ class PostListView(ListView):
         return posts
     
 
-class PostDetailView(DetailView):
+class PostDetailView(LoginRequiredMixin, DetailView):
     model = Post
     context_object_name = 'post'
 
@@ -55,7 +56,7 @@ class PostDetailView(DetailView):
         return query
 
 
-class PostFormView(FormView):
+class PostFormView(LoginRequiredMixin, FormView):
     template_name = 'blog/post_form_for_FormView.html'
     form_class = PostModelForm
     success_url = reverse_lazy('blog:post-list')
@@ -67,7 +68,7 @@ class PostFormView(FormView):
         return super().form_valid(form)
     
 
-class PostCreateView(CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     
     # If `form_class` is not defined, Django's CreateView
@@ -83,7 +84,7 @@ class PostCreateView(CreateView):
         return super().form_valid(form)
     
 
-class PostEditView(UpdateView):
+class PostEditView(LoginRequiredMixin, UpdateView):
     model = Post
     form_class = PostModelForm
     success_url = reverse_lazy('blog:post-list')
@@ -97,7 +98,7 @@ class PostEditView(UpdateView):
         return query
         
 
-class PostDeleteView(DeleteView):
+class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
     success_url = reverse_lazy('blog:post-list')
 
@@ -105,6 +106,14 @@ class PostDeleteView(DeleteView):
         query = super().get_queryset()
         query = query.filter(status=True)
         return query
+
+
+''' Python's Method Resolution Order
+for cls in PostListView.__mro__:
+    print(cls.__name__)
+
+print(PostListView.__mro__)
+'''
 
 
 ''' FBV to show a template
