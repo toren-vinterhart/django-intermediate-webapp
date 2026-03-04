@@ -4,7 +4,7 @@ from django.views.generic.base import TemplateView, RedirectView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from .models import Post
 from .forms import PostModelForm
 
@@ -32,7 +32,7 @@ class RedirectToMSN(RedirectView):
         return super().get_redirect_url(*args, **kwargs)
 
 
-class PostListView(LoginRequiredMixin, ListView):
+class PostListView(PermissionRequiredMixin, LoginRequiredMixin, ListView):
     """ A class-based view for posts list"""
     # model = Post # Instead of this we can use queryset or get_queryset method
     # queryset = Post.objects.all()
@@ -40,6 +40,7 @@ class PostListView(LoginRequiredMixin, ListView):
     context_object_name = 'posts' # default name is object_list
     paginate_by = 2
     # ordering = ['-published_date'] # it works when we use model or queryset instead of get_queryset method
+    permission_required = 'blog.view_post'
 
     def get_queryset(self):
         posts = Post.objects.filter(status=True).order_by('-published_date')
