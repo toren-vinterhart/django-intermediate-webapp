@@ -5,6 +5,10 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
 from .models import Post
 from .forms import PostModelForm
 
@@ -107,6 +111,11 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
         query = super().get_queryset()
         query = query.filter(status=True)
         return query
+    
+
+@api_view()
+def api_post_list_view(request):
+    return Response({'name': 'Jack'})
 
 
 ''' Python's Method Resolution Order
