@@ -167,7 +167,7 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 # region class_base_ViewSets_API_View
-
+'''
 class PostViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Post.objects.filter(status=True)
@@ -203,5 +203,15 @@ class PostViewSet(viewsets.ViewSet):
         post_object = get_object_or_404(self.queryset, pk=pk)
         post_object.delete()
         return Response({'detail': 'Item deleted successfully!!!'}, status=status.HTTP_204_NO_CONTENT)
+'''
+# endregion
 
-# endregion 
+
+# region class_base_ModelViewSets_API_View
+
+class PostModelViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Post.objects.filter(status=True)
+    serializer_class = PostSerializer
+
+# endregion
