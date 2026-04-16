@@ -7,8 +7,8 @@ from rest_framework import mixins, generics, viewsets
 from rest_framework.response import Response
 from rest_framework import status
 # from blog.models import Post
-from ...models import Post
-from .serializers import PostSerializer
+from ...models import Post, Category
+from .serializers import PostSerializer, CategorySerializer
 
 
 # region function_base_api_view
@@ -213,5 +213,11 @@ class PostModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Post.objects.filter(status=True)
     serializer_class = PostSerializer
+
+
+class CategoryModelViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
 
 # endregion
