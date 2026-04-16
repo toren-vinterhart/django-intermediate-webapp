@@ -65,6 +65,7 @@ def postDetail(request, id):
 '''
 # endregion
 
+
 # region class_base_API_View
 '''
 class PostList(APIView):
@@ -113,6 +114,7 @@ class PostDetail(APIView):
 '''
 # endregion
 
+
 # region class_base_Mixin_and_Generic_API_View
 '''
 class PostList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
@@ -146,8 +148,9 @@ class PostDetail(mixins.RetrieveModelMixin,
 '''
 # endregion
 
-# region class_base_generics_API_View
 
+# region class_base_generics_API_View
+'''
 class PostList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Post.objects.filter(status=True)
@@ -159,5 +162,46 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.filter(status=True)
     serializer_class = PostSerializer
     # lookup_field = 'id' # If we use id in urls instead of pk we must set this
-
+'''
 # endregion
+
+
+# region class_base_ViewSets_API_View
+
+class PostViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = Post.objects.filter(status=True)
+    serializer_class = PostSerializer
+
+    def list(self, request):
+        query = Post.objects.filter(status=True) # use this query in this line because global queryset didn't update after editing or deleting until restart app. 
+        serializer = self.serializer_class(query, many=True)
+        return Response(serializer.data)
+    
+    def create(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
+    def retrieve(self, request, pk=None):
+        post_object = get_object_or_404(self.queryset, pk=pk)
+        serializer = self.serializer_class(post_object)
+        return Response(serializer.data)
+    
+    def update(self, request, pk=None):
+        post_object = get_object_or_404(self.queryset, pk=pk)
+        serializer = self.serializer_class(post_object, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
+    def partial_update(self, request, pk=None):
+        pass
+
+    def destroy(self, request, pk=None):
+        post_object = get_object_or_404(self.queryset, pk=pk)
+        post_object.delete()
+        return Response({'detail': 'Item deleted successfully!!!'}, status=status.HTTP_204_NO_CONTENT)
+
+# endregion 
