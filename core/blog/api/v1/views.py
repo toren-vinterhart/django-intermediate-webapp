@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework import mixins, generics, viewsets
 # from rest_framework.generics import GenericAPIView
@@ -213,6 +213,11 @@ class PostModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Post.objects.filter(status=True)
     serializer_class = PostSerializer
+
+    # A custom action
+    @action(methods=['get'], detail=False) # detail must be True if we have args like pk. 
+    def get_ok(self, request):
+        return Response({'detail': 'ok'})
 
 
 class CategoryModelViewSet(viewsets.ModelViewSet):
