@@ -215,9 +215,9 @@ class PostModelViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
 
     # A custom action
-    @action(methods=['get'], detail=False) # detail must be True if we have args like pk. 
-    def get_ok(self, request):
-        return Response({'detail': 'ok'})
+    # @action(methods=['get'], detail=False) # detail must be True if we have args like pk. 
+    # def get_ok(self, request):
+    #     return Response({'detail': 'ok'})
 
 
 class CategoryModelViewSet(viewsets.ModelViewSet):
