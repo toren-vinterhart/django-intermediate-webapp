@@ -6,6 +6,7 @@ from rest_framework import mixins, generics, viewsets
 # from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import status
+from django_filters.rest_framework import DjangoFilterBackend
 # from blog.models import Post
 from ...models import Post, Category
 from .serializers import PostSerializer, CategorySerializer
@@ -214,6 +215,8 @@ class PostModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Post.objects.filter(status=True)
     serializer_class = PostSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['category', 'author', 'status']
 
     # A custom action
     # @action(methods=['get'], detail=False) # detail must be True if we have args like pk. 
