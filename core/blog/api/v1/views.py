@@ -12,6 +12,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from ...models import Post, Category
 from .serializers import PostSerializer, CategorySerializer
 from .permissions import IsOwnerOrReadOnly
+from .paginations import DefaultPagination
 
 
 # region function_base_api_view
@@ -216,6 +217,7 @@ class PostModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Post.objects.filter(status=True)
     serializer_class = PostSerializer
+    pagination_class = DefaultPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['category', 'author', 'status']
     search_fields = ['title', 'content']
