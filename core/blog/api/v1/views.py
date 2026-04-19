@@ -9,6 +9,7 @@ from rest_framework import status
 # from blog.models import Post
 from ...models import Post, Category
 from .serializers import PostSerializer, CategorySerializer
+from .permissions import IsOwnerOrReadOnly
 
 
 # region function_base_api_view
@@ -210,7 +211,7 @@ class PostViewSet(viewsets.ViewSet):
 # region class_base_ModelViewSets_API_View
 
 class PostModelViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Post.objects.filter(status=True)
     serializer_class = PostSerializer
 
