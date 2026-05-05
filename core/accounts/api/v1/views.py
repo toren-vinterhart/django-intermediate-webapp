@@ -1,3 +1,6 @@
+from django.contrib.auth import get_user_model
+# from django.contrib.auth.models import User
+# from accounts.models import User
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -6,8 +9,13 @@ from rest_framework import status
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import RegistrationSerializer, CustomAuthTokenSerializer, CustomTokenObtainPairSerializer
+from .serializers import (RegistrationSerializer, 
+                          CustomAuthTokenSerializer, 
+                          CustomTokenObtainPairSerializer, 
+                          ChangePasswordSerializer)
 
+
+User = get_user_model()
 
 class RegistrationApiView(generics.GenericAPIView):
     serializer_class = RegistrationSerializer
@@ -58,3 +66,27 @@ class CustomDiscardAuthToken(APIView):
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
+
+class ChangePasswordApiView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ChangePasswordSerializer
+    # model = User
+
+    def get_object(self):
+        return self.request.user
+        
+    def put(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            # if not self.object.check_password(serializer.data.get('old_password')):
+            if not self.object.check_password(serializer.validated_data['old_password']):
+                return Response({'old_password': ['Wrong password.']}, status=status.HTTP_400_BAD_REQUEST)
+            self.object.set_password(serializer.validated_data['new_password'])
+            self.object.save()
+            return Response({'details': 'password changed successfully'}, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
