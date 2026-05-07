@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 # from django.contrib.auth.models import User
 # from accounts.models import User
+from django.core.mail import send_mail
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -90,3 +91,10 @@ class ChangePasswordApiView(generics.GenericAPIView):
             return Response({'details': 'password changed successfully'}, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class TestEmailSendApiView(generics.GenericAPIView):
+    def get(self, request, *args, **kwargs):
+        send_mail('Subject here', 'Here is the message.', 'from@example.com', ['to@example.com'], fail_silently=False)
+        return Response('The email has been sent')
+
