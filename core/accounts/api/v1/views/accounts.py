@@ -10,7 +10,9 @@ from rest_framework import status
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework_simplejwt.views import TokenObtainPairView
-from mail_templated import send_mail
+# from mail_templated import send_mail
+from mail_templated import EmailMessage
+from ...utils import EmailThread
 from ..serializers import (RegistrationSerializer, 
                           CustomAuthTokenSerializer, 
                           CustomTokenObtainPairSerializer, 
@@ -96,11 +98,21 @@ class ChangePasswordApiView(generics.GenericAPIView):
 
 class TestEmailSendApiView(generics.GenericAPIView):
     def get(self, request, *args, **kwargs):
-        send_mail('email/hello.tpl', {'name': 'Jack'}, 'from@gmail.com', ['to@gmail.com'])
+        email_obj = EmailMessage('email/hello.tpl', {'name': 'John'}, 'from@gmail.com', to=['to@gmail.com'])
+        # email_obj.send()
+        EmailThread(email_obj).start()
         return Response('The email has been sent')
     
 
 # class TestEmailSendApiView(generics.GenericAPIView):
 #     def get(self, request, *args, **kwargs):
-#         send_mail('Subject here', 'Here is the message.', 'from@example.com', ['to@example.com'], fail_silently=False) # this send_mail method came from django.core.mail
+#         # this send_mail method came from mail_templated
+#         send_mail('email/hello.tpl', {'name': 'Jack'}, 'from@gmail.com', ['to@gmail.com'])
+#         return Response('The email has been sent')
+    
+
+# class TestEmailSendApiView(generics.GenericAPIView):
+#     def get(self, request, *args, **kwargs):
+#         # this send_mail method came from django.core.mail
+#         send_mail('Subject here', 'Here is the message.', 'from@example.com', ['to@example.com'], fail_silently=False)
 #         return Response('The email has been sent')
