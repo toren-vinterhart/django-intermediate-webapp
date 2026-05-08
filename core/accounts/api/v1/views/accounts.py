@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 # from django.contrib.auth.models import User
 # from accounts.models import User
+from django.shortcuts import get_object_or_404
 # from django.core.mail import send_mail
 from rest_framework import generics
 from rest_framework.views import APIView
@@ -10,6 +11,7 @@ from rest_framework import status
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.tokens import RefreshToken
 # from mail_templated import send_mail
 from mail_templated import EmailMessage
 from ...utils import EmailThread
@@ -97,11 +99,24 @@ class ChangePasswordApiView(generics.GenericAPIView):
     
 
 class TestEmailSendApiView(generics.GenericAPIView):
+
     def get(self, request, *args, **kwargs):
-        email_obj = EmailMessage('email/hello.tpl', {'name': 'John'}, 'from@gmail.com', to=['to@gmail.com'])
+        self.email = 'jack@gmail.com' # Hard-coded this fake email address for testing purposes.
+        user_obj = get_object_or_404(User, email=self.email)
+        token = self.get_tokens_for_user(user_obj)
+        email_obj = EmailMessage('email/activation.tpl', {'token': token}, 'from@gmail.com', to=[self.email])
         # email_obj.send()
         EmailThread(email_obj).start()
         return Response('The email has been sent')
+    
+    def get_tokens_for_user(self, user):
+        refresh = RefreshToken.for_user(user)
+
+        # return {
+        #     'refresh': str(refresh),
+        #     'access': str(refresh.access_token),
+        # }
+        return str(refresh.access_token)
     
 
 # class TestEmailSendApiView(generics.GenericAPIView):
