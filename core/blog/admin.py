@@ -3,12 +3,20 @@ from .models import Post, Category
 
 # Register your models here.
 
+
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'status', 'category', 'created_date', 'published_date')
-    list_editable = ('status',)
+    list_display = (
+        "title",
+        "author",
+        "status",
+        "category",
+        "created_date",
+        "published_date",
+    )
+    list_editable = ("status",)
 
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name']
+    list_display = ["name"]

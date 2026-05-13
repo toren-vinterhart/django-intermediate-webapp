@@ -1,22 +1,27 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes, action
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
+from rest_framework.permissions import (
+    IsAuthenticated,
+    IsAuthenticatedOrReadOnly,
+    IsAdminUser,
+)
 from rest_framework import mixins, generics, viewsets
+
 # from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
+
 # from blog.models import Post
 from ...models import Post, Category
 from .serializers import PostSerializer, CategorySerializer
 from .permissions import IsOwnerOrReadOnly
 from .paginations import DefaultPagination
 
-
 # region function_base_api_view
-'''
+"""
 @api_view(["GET", "POST"])
 # @permission_classes([IsAdminUser])
 # @permission_classes([IsAuthenticatedOrReadOnly])
@@ -66,7 +71,7 @@ def postDetail(request, id):
     # except Post.DoesNotExist:
     #     # return Response({'detail': 'post does not exists'}, status=404)
     #     return Response({'detail': 'post does not exists'}, status=status.HTTP_404_NOT_FOUND)
-'''
+"""
 # endregion
 
 
@@ -120,7 +125,7 @@ class PostDetail(APIView):
 
 
 # region class_base_Mixin_and_Generic_API_View
-'''
+"""
 class PostList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Post.objects.filter(status=True)
@@ -149,12 +154,12 @@ class PostDetail(mixins.RetrieveModelMixin,
     
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
-'''
+"""
 # endregion
 
 
 # region class_base_generics_API_View
-'''
+"""
 class PostList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Post.objects.filter(status=True)
@@ -166,12 +171,12 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.filter(status=True)
     serializer_class = PostSerializer
     # lookup_field = 'id' # If we use id in urls instead of pk we must set this
-'''
+"""
 # endregion
 
 
 # region class_base_ViewSets_API_View
-'''
+"""
 class PostViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Post.objects.filter(status=True)
@@ -207,25 +212,34 @@ class PostViewSet(viewsets.ViewSet):
         post_object = get_object_or_404(self.queryset, pk=pk)
         post_object.delete()
         return Response({'detail': 'Item deleted successfully!!!'}, status=status.HTTP_204_NO_CONTENT)
-'''
+"""
 # endregion
 
 
 # region class_base_ModelViewSets_API_View
+
 
 class PostModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     queryset = Post.objects.filter(status=True)
     serializer_class = PostSerializer
     pagination_class = DefaultPagination
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
     # filterset_fields = ['category', 'author', 'status']
-    filterset_fields = {'category':['exact', 'in'], 'author': ['exact'], 'status': ['exact']}
-    search_fields = ['title', 'content']
-    ordering_fields = ['created_date', 'published_date']
+    filterset_fields = {
+        "category": ["exact", "in"],
+        "author": ["exact"],
+        "status": ["exact"],
+    }
+    search_fields = ["title", "content"]
+    ordering_fields = ["created_date", "published_date"]
 
     # A custom action
-    # @action(methods=['get'], detail=False) # detail must be True if we have args like pk. 
+    # @action(methods=['get'], detail=False) # detail must be True if we have args like pk.
     # def get_ok(self, request):
     #     return Response({'detail': 'ok'})
 
@@ -234,5 +248,6 @@ class CategoryModelViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
 
 # endregion
