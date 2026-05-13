@@ -1,16 +1,24 @@
-from django.shortcuts import get_object_or_404
-from rest_framework.views import APIView
-from rest_framework.decorators import api_view, permission_classes, action
+# from django.shortcuts import get_object_or_404
+# from rest_framework.views import APIView
+# from rest_framework.decorators import (
+#     api_view,
+#     action,
+#     permission_classes,
+# )
 from rest_framework.permissions import (
     IsAuthenticated,
-    IsAuthenticatedOrReadOnly,
-    IsAdminUser,
+    # IsAuthenticatedOrReadOnly,
+    # IsAdminUser,
 )
-from rest_framework import mixins, generics, viewsets
+from rest_framework import (
+    # mixins,
+    # generics,
+    viewsets,
+)
 
 # from rest_framework.generics import GenericAPIView
-from rest_framework.response import Response
-from rest_framework import status
+# from rest_framework.response import Response
+# from rest_framework import status
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -36,7 +44,7 @@ def postList(request):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-    
+
         # if serializer.is_valid():
         #     serializer.save()
         #     return Response(serializer.data)
@@ -87,14 +95,14 @@ class PostList(APIView):
         posts = Post.objects.filter(status=True)
         serializer = self.serializer_class(posts, many=True)
         return Response(serializer.data)
-    
+
     def post(self, request):
         """ creating a post with provided data """
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-    
+
 
 class PostDetail(APIView):
     """ getting detail of the post and edit plus removing it """
@@ -106,7 +114,7 @@ class PostDetail(APIView):
         post = get_object_or_404(Post, pk=id, status=True)
         serializer = self.serializer_class(post)
         return Response(serializer.data)
-    
+
     def put(self, request, id):
         """ editing the post data """
         post = get_object_or_404(Post, pk=id, status=True)
@@ -114,7 +122,7 @@ class PostDetail(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-    
+
     def delete(self, request, id):
         """ deleting the post object """
         post = get_object_or_404(Post, pk=id, status=True)
@@ -133,25 +141,25 @@ class PostList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericA
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
-    
+
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-class PostDetail(mixins.RetrieveModelMixin, 
-                 mixins.UpdateModelMixin, 
-                 mixins.DestroyModelMixin, 
+class PostDetail(mixins.RetrieveModelMixin,
+                 mixins.UpdateModelMixin,
+                 mixins.DestroyModelMixin,
                  generics.GenericAPIView):
-    
+
     permission_classes = [IsAuthenticated]
     queryset = Post.objects.filter(status=True)
     serializer_class = PostSerializer
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
-    
+
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
-    
+
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 """
@@ -183,28 +191,28 @@ class PostViewSet(viewsets.ViewSet):
     serializer_class = PostSerializer
 
     def list(self, request):
-        query = Post.objects.filter(status=True) # use this query in this line because global queryset didn't update after editing or deleting until restart app. 
+        query = Post.objects.filter(status=True) # use this query in this line because global queryset didn't update after editing or deleting until restart app.
         serializer = self.serializer_class(query, many=True)
         return Response(serializer.data)
-    
+
     def create(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-    
+
     def retrieve(self, request, pk=None):
         post_object = get_object_or_404(self.queryset, pk=pk)
         serializer = self.serializer_class(post_object)
         return Response(serializer.data)
-    
+
     def update(self, request, pk=None):
         post_object = get_object_or_404(self.queryset, pk=pk)
         serializer = self.serializer_class(post_object, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-    
+
     def partial_update(self, request, pk=None):
         pass
 

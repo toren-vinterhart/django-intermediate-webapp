@@ -1,10 +1,22 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import (
+    # render,
+    # redirect,
+    get_object_or_404,
+)
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView, RedirectView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.views.generic.edit import (
+    FormView,
+    CreateView,
+    UpdateView,
+    DeleteView,
+)
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+)
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response

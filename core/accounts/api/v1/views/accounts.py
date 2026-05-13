@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
-from django.conf import settings
 
+# from django.conf import settings
 # from django.contrib.auth.models import User
 # from accounts.models import User
 from django.shortcuts import get_object_or_404
@@ -124,7 +124,8 @@ class ChangePasswordApiView(generics.GenericAPIView):
             self.object.set_password(serializer.validated_data["new_password"])
             self.object.save()
             return Response(
-                {"details": "password changed successfully"}, status=status.HTTP_200_OK
+                {"details": "password changed successfully"},
+                status=status.HTTP_200_OK,
             )
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -145,7 +146,8 @@ class ActivationApiView(APIView):
             )
         except InvalidSignatureError:
             return Response(
-                {"details": "Token is not valid!"}, status=status.HTTP_400_BAD_REQUEST
+                {"details": "Token is not valid!"},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         user_obj = get_object_or_404(User, pk=user_id)
