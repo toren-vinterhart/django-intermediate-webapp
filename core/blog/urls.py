@@ -6,9 +6,10 @@ from . import views
 app_name = "blog"
 
 urlpatterns = [
-    path("cbv-index/", views.IndexView.as_view(), name="cbv-index"),
-    path("post/", views.api_post_list_view, name="api-post-list"),
-    # path('post/', views.PostListView.as_view(), name='post-list'),
+    path('', views.IndexView.as_view(), name='index'),
+    path("cbv-index/", views.IndexViewCBV.as_view(), name="cbv-index"),
+    path("api-post/", views.api_post_list_view, name="api-post-list"),
+    path('post/', views.PostListView.as_view(), name='post-list'),
     path("post/<int:pk>/", views.PostDetailView.as_view(), name="post-detail"),
     path("post/form/", views.PostFormView.as_view(), name="post-form"),
     path("post/create/", views.PostCreateView.as_view(), name="post-create"),

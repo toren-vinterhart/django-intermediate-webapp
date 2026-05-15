@@ -28,6 +28,15 @@ from .forms import PostModelForm
 
 
 class IndexView(TemplateView):
+    template_name = "test.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["name"] = 'Jack'
+        return context
+
+
+class IndexViewCBV(TemplateView):
     """A class-based view for show index page"""
 
     template_name = "index.html"
