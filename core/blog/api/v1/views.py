@@ -228,7 +228,10 @@ class PostViewSet(viewsets.ViewSet):
 
 
 class PostModelViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+    permission_classes = [
+        # IsAuthenticated,
+        IsOwnerOrReadOnly,
+    ]
     queryset = Post.objects.filter(status=True)
     serializer_class = PostSerializer
     pagination_class = DefaultPagination
