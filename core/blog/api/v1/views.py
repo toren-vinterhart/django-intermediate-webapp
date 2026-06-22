@@ -25,7 +25,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 # from blog.models import Post
 from ...models import Post, Category
 from .serializers import PostSerializer, CategorySerializer
-from .permissions import IsOwnerOrReadOnly
+
+# from .permissions import IsOwnerOrReadOnly
 from .paginations import DefaultPagination
 
 # region function_base_api_view

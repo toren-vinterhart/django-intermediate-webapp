@@ -10,10 +10,14 @@ def api_client():
     client = APIClient()
     return client
 
+
 @pytest.fixture
 def common_user():
-    user = User.objects.create_user(email="test@test.com", password="test", is_verified=True)
+    user = User.objects.create_user(
+        email="test@test.com", password="test", is_verified=True
+    )
     return user
+
 
 # @pytest.fixture
 # def common_user(django_user_model):
@@ -24,7 +28,7 @@ def common_user():
 @pytest.mark.django_db
 class TestPostApi:
     # client = APIClient()
-    
+
     def test_get_post_response_200_status(self, api_client):
         url = reverse("blog:api-v1:post-list")
         response = api_client.get(url)
@@ -35,9 +39,9 @@ class TestPostApi:
         data = {
             "title": "test",
             "content": "description",
-            "status": True, 
+            "status": True,
             "published_date": datetime.now(),
-            }
+        }
         response = api_client.post(url, data)
         assert response.status_code == 401
 
@@ -46,21 +50,23 @@ class TestPostApi:
         data = {
             "title": "test",
             "content": "description",
-            "status": True, 
+            "status": True,
             "published_date": datetime.now(),
-            }
+        }
         user = common_user
         api_client.force_login(user=user)
         # api_client.force_authenticate(user=user)
         response = api_client.post(url, data)
         assert response.status_code == 201
 
-    def test_create_post_invalid_data_response_400_status(self, api_client, common_user):
+    def test_create_post_invalid_data_response_400_status(
+        self, api_client, common_user
+    ):
         url = reverse("blog:api-v1:post-list")
         data = {
             "title": "test",
             "content": "description",
-            }
+        }
         user = common_user
         api_client.force_login(user=user)
         response = api_client.post(url, data)
