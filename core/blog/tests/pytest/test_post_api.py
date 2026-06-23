@@ -27,6 +27,9 @@ def common_user():
 
 @pytest.mark.django_db
 class TestPostApi:
+    """
+    Tests for the Post API
+    """
     # client = APIClient()
 
     def test_get_post_response_200_status(self, api_client):
